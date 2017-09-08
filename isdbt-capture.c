@@ -273,8 +273,8 @@ int main (int argc, char *argv[])
     if (argc < 2)
     {
     manual:
-	fprintf(stderr, "Usage modes: \n%s -c channel_number -p player -o output.ts [-l layer_info]\n", argv[0]);
-	fprintf(stderr, "%s [-s channels.txt]\n", argv[0]);
+	fprintf(stderr, "Usage modes: \n%s -a adapter_number -c channel_number -p player -o output.ts [-l layer_info]\n", argv[0]);
+	fprintf(stderr, "%s [-s channels.txt -a adapter_number]\n", argv[0]);
 	fprintf(stderr, "%s [-i]\n", argv[0]);
 	fprintf(stderr, "\nOptions:\n");
 	fprintf(stderr, " -c                Channel number (7-69) (Mandatory).\n");
