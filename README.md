@@ -3,8 +3,8 @@ It should work for all the countries in Latin America that uses the ISDB-T Inter
 
 Author: Rafael Diniz <rafael@riseup.net>
 
-I am grateful to the authors of this program.
-I adjusted it to suit the terrestrial digital broadcasting in Japan.
+I am grateful to the authors of this program.  
+I adjusted it to suit the terrestrial digital broadcasting in Japan.  
 And changed to be able to specify the adapter number.
 
 Author: airwhite <airwhite@airwhite.net>
