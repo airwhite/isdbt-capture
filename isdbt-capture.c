@@ -128,12 +128,12 @@ int keep_reading;
 int scan_channels(char *output_file, bool uhf_only) 
 {
   struct dvb_resource res;
-  int layer_info = LAYER_A;
+  int layer_info = LAYER_FULL;
 
   FILE *fp = fopen(output_file, "w");
   int channel_id = 0;
 
-  for (int channel_counter = (uhf_only == true)? 14: 7;
+  for (int channel_counter = (uhf_only == true)? 13: 7;
        channel_counter <= 69; channel_counter++)
   {
 
