@@ -125,13 +125,15 @@ struct ring_buffer output_buffer;
 
 int keep_reading;
 
-int scan_channels(char *output_file, bool uhf_only) 
+int scan_channels(char *output_file, bool uhf_only, int adapter_no) 
 {
   struct dvb_resource res;
   int layer_info = LAYER_FULL;
 
   FILE *fp = fopen(output_file, "w");
   int channel_id = 0;
+  char adapter_name[64];
+  sprintf(adapter_name, "/dev/dvb/adapter%d", adapter_no);
 
   for (int channel_counter = (uhf_only == true)? 13: 7;
        channel_counter <= 69; channel_counter++)
@@ -142,7 +144,7 @@ int scan_channels(char *output_file, bool uhf_only)
 
       dvbres_init(&res);
 
-      if (dvbres_open(&res, tv_channels[channel_counter], NULL, layer_info) < 0)
+      if (dvbres_open(&res, tv_channels[channel_counter], adapter_name, layer_info) < 0)
       {
 	  fprintf(stderr, "%s\n", res.error_msg);
 	  exit(EXIT_FAILURE);
@@ -280,7 +282,7 @@ int main (int argc, char *argv[])
 	fprintf(stderr, " -a                Adapter number (0-n) (Optional).\n");
 	fprintf(stderr, " -p                Choose a player to play the selected channel (Eg. \"mplayer -vf yadif\" or \"vlc\") (Optional).\n");
 	fprintf(stderr, " -l                Layer information. Possible values are: 0 (All layers), 1 (Layer A), 2 (Layer B), 3 (Layer C) (Optional).\n\n");
-	fprintf(stderr, " -s channels.cfg   Scan for channels, store them in a file and exit.\n");
+	fprintf(stderr, " -s channels.cfg   Scan for channels, store them in a file and exit. with -a option.\n");
         fprintf(stderr, " -i                Print ISDB-T device information and exit.\n");
 	fprintf(stderr, "\nTo quit press 'Ctrl+C'.\n");
 	exit(EXIT_FAILURE);
@@ -336,10 +338,10 @@ int main (int argc, char *argv[])
 	}
     }
 
-    if(scan_mode == true)
+    if(scan_mode == true && adapter_no != -1)
     {
 	fprintf(stderr, "Scan information:\n");
-	scan_channels(scan_file, true);
+	scan_channels(scan_file, true, adapter_no);
     }
 
     if (info_mode == true || scan_mode == true)
