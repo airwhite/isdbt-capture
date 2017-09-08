@@ -86,7 +86,7 @@ int dvbres_listdevices(struct dvb_resource* res, char* buffer, int max_length)
       sprintf(frontname, "%s/frontend0", adaptername);
 
       // opening device
-      int front = open(frontname, O_RDWR);
+      int front = open(frontname, O_RDONLY);
       if (front == -1 && ifnum == 0)
 	  return _dvbres_error(res, "Error opening frontend.", errno);
       if (front == -1 && ifnum > 0)
@@ -119,7 +119,7 @@ int dvbres_listdevices(struct dvb_resource* res, char* buffer, int max_length)
       if (ifnum > 0) {
 	  if (pos >= max_length)
 	      return _dvbres_error(res, "Device enum buffer too small", -1);
-	  buffer[pos++] = '\t';
+	  buffer[pos++] = '\n';
       }
       
       // space check
