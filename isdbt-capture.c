@@ -252,6 +252,8 @@ int main (int argc, char *argv[])
     bool scan_mode = false, info_mode = false, player_mode = false, tsoutput_mode = false;
     char temp_file[] = "/tmp/out.ts";
     char player_cmd[256];
+    int adapter_no = -1;
+    char adapter_name[64];
 
     int opt;
     void *addr;
@@ -275,6 +277,7 @@ int main (int argc, char *argv[])
 	fprintf(stderr, "\nOptions:\n");
 	fprintf(stderr, " -c                Channel number (7-69) (Mandatory).\n");
 	fprintf(stderr, " -o                Output TS filename (Optional).\n");
+	fprintf(stderr, " -a                Adapter number (0-n) (Optional).\n");
 	fprintf(stderr, " -p                Choose a player to play the selected channel (Eg. \"mplayer -vf yadif\" or \"vlc\") (Optional).\n");
 	fprintf(stderr, " -l                Layer information. Possible values are: 0 (All layers), 1 (Layer A), 2 (Layer B), 3 (Layer C) (Optional).\n\n");
 	fprintf(stderr, " -s channels.cfg   Scan for channels, store them in a file and exit.\n");
@@ -283,7 +286,7 @@ int main (int argc, char *argv[])
 	exit(EXIT_FAILURE);
     }
 
-    while ((opt = getopt(argc, argv, "io:c:l:s:p:")) != -1) 
+    while ((opt = getopt(argc, argv, "io:a:c:l:s:p:")) != -1) 
     {
         switch (opt) 
         {
@@ -293,6 +296,10 @@ int main (int argc, char *argv[])
 	case 'o':
 	    tsoutput_mode = true;
 	    strcpy(output_file, optarg);
+	    break;
+	case 'a':
+	    adapter_no = atoi(optarg);
+	    fprintf(stderr, "/dev/dvb/adapter%d selected.\n", adapter_no);
 	    break;
 	case 'c':
 	    freq = tv_channels[atoi(optarg)];
@@ -345,10 +352,19 @@ int main (int argc, char *argv[])
     dvbres_init(&res);
 
     fprintf(stderr, "Opening DVB devices.\n");
-    if (dvbres_open(&res, freq, NULL, layer_info) < 0)
-    {
-	fprintf(stderr, "%s\n", res.error_msg);
-	exit(EXIT_FAILURE);
+    if (adapter_no == -1) {
+	if (dvbres_open(&res, freq, NULL, layer_info) < 0)
+	{
+	    fprintf(stderr, "%s\n", res.error_msg);
+	    exit(EXIT_FAILURE);
+	}
+    } else {
+	sprintf(adapter_name, "/dev/dvb/adapter%d", adapter_no);
+	if (dvbres_open(&res, freq, adapter_name, layer_info) < 0)
+	{
+	    fprintf(stderr, "%s\n", res.error_msg);
+	    exit(EXIT_FAILURE);
+	}
     }
 
     int i;
