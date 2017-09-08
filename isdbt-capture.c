@@ -387,6 +387,7 @@ int main (int argc, char *argv[])
     
     if (player_mode == true)
     {
+	if (adapter_no != -1) sprintf(temp_file, "/tmp/out%d.ts", adapter_no);
 	unlink(temp_file);
 	mkfifo(temp_file, S_IRWXU | S_IRWXG | S_IRWXO);
 
