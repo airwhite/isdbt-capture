@@ -116,6 +116,7 @@ uint64_t tv_channels[] =
 struct dvb_resource res;
 FILE *ts = NULL;
 FILE *player = NULL;
+int adapter_no = -1;
 
 // thread and ring buffer variables...
 pthread_t output_thread_id;
@@ -185,6 +186,9 @@ int scan_channels(char *output_file, bool uhf_only, int adapter_no)
 }
 
 void finish(int s){
+
+    char fifo_file[64];
+
     fprintf(stderr, "\nExiting...\n");
 
     keep_reading = 0;
@@ -196,8 +200,12 @@ void finish(int s){
     if (ts)
 	fclose(ts);
 
-    if (player)
+    if (player) {
 	fclose(player);
+	sprintf(fifo_file, "/tmp/out%d.ts", adapter_no);
+	remove(fifo_file);
+	fprintf(stderr, "rm %s\n", fifo_file);
+    }
 
     exit(EXIT_SUCCESS); 
 }
@@ -254,7 +262,6 @@ int main (int argc, char *argv[])
     bool scan_mode = false, info_mode = false, player_mode = false, tsoutput_mode = false;
     char temp_file[] = "/tmp/out.ts";
     char player_cmd[256];
-    int adapter_no = -1;
     char adapter_name[64];
 
     int opt;
