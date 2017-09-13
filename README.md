@@ -6,5 +6,11 @@ Author: Rafael Diniz <rafael@riseup.net>
 I am grateful to the authors of this program.  
 I adjusted it to suit the terrestrial digital broadcasting in Japan.  
 And changed to be able to specify the adapter number.
+~~~
+# Adapter 0, Channel 22, output file test.ts
+$ isdbt-capture -a 0 -c 22 -o test.ts
 
+# Adapter 1, Channel 23, output stdout
+$ isdbt-capture -a 1 -c 23 -p cat
+~~~
 Author: airwhite <airwhite@airwhite.net>
