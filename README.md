@@ -10,7 +10,7 @@ And changed to be able to specify the adapter number.
 # Adapter 0, Channel 22, output file test.ts
 $ isdbt-capture -a 0 -c 22 -o test.ts
 
-# Adapter 1, Channel 23, output stdout
-$ isdbt-capture -a 1 -c 23 -p cat
+# Adapter 1, Channel 23, output to stdout
+$ isdbt-capture -a 1 -c 23 -o -
 ~~~
 Author: airwhite <airwhite@airwhite.net>
