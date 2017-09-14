@@ -197,7 +197,7 @@ void finish(int s){
 
     dvbres_close(&res);
 
-    if (ts)
+    if (ts != stdout)
 	fclose(ts);
 
     if (player) {
@@ -267,12 +267,11 @@ int main (int argc, char *argv[])
     int opt;
     void *addr;
 
+    signal(SIGINT, finish);
 
     pthread_mutex_init(&output_mutex, NULL); 
     pthread_cond_init(&output_cond, NULL); 
     ring_buffer_create(&output_buffer, 28); 
-    
-    signal (SIGINT,finish);
     
     fprintf(stderr, "isdbt-capture by Rafael Diniz -  rafael (AT) riseup (DOT) net\n");
     fprintf(stderr, "License: GPLv3+\n\n");
@@ -285,7 +284,7 @@ int main (int argc, char *argv[])
 	fprintf(stderr, "%s [-i]\n", argv[0]);
 	fprintf(stderr, "\nOptions:\n");
 	fprintf(stderr, " -c                Channel number (7-69) (Mandatory).\n");
-	fprintf(stderr, " -o                Output TS filename (Optional).\n");
+	fprintf(stderr, " -o filename       Output TS filename. filename is '-' out to stdout. (Optional).\n");
 	fprintf(stderr, " -a                Adapter number (0-n) (Optional).\n");
 	fprintf(stderr, " -p                Choose a player to play the selected channel (Eg. \"mplayer -vf yadif\" or \"vlc\") (Optional).\n");
 	fprintf(stderr, " -l                Layer information. Possible values are: 0 (All layers), 1 (Layer A), 2 (Layer B), 3 (Layer C) (Optional).\n\n");
@@ -418,7 +417,11 @@ int main (int argc, char *argv[])
 
     if (tsoutput_mode == true)
     {
-	ts = fopen(output_file, "w");
+	if (strcmp(output_file, "-")) {
+	    ts = fopen(output_file, "w");
+	} else {
+	    ts = stdout;
+	}
 	if (ts == NULL)
 	{
 	    fprintf(stderr, "Error opening file: %s.\n", output_file);
