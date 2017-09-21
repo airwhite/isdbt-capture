@@ -446,6 +446,9 @@ int main (int argc, char *argv[])
     keep_reading = 1;
     pthread_create(&output_thread_id, NULL, output_thread, NULL);
 
+    // variable for discard logic
+    int count_packets = 0;
+
     while (1) 
     {
     try_again_read:
@@ -463,6 +466,12 @@ int main (int argc, char *argv[])
 	    pthread_mutex_lock(&output_mutex);
 	    pthread_cond_wait(&output_cond, &output_mutex);
 	    pthread_mutex_unlock(&output_mutex);
+	    goto try_again_read;
+	}
+
+	// discard the first 2000 packets
+	if (count_packets <= 2000) {
+	    count_packets++;
 	    goto try_again_read;
 	}
 
