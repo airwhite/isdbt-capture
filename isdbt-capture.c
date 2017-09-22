@@ -470,7 +470,7 @@ int main (int argc, char *argv[])
 	}
 
 	// discard the first 2000 packets
-	if (count_packets <= 2000) {
+	if (count_packets < 2000) {
 	    count_packets++;
 	    goto try_again_read;
 	}
